@@ -1,0 +1,6 @@
+{
+	"name": "CargoEDIContainer",
+	"dockerComposeFile": "docker-compose.yml",
+	"service": "db",
+	"workspaceFolder": "/workspace"
+}

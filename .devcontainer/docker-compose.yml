@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  db:
+    container_name: cargo_edi_db
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      POSTGRES_HOST: db
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: xyz123
+      POSTGRES_DB: cargodb
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data:
