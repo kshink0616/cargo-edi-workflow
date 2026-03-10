@@ -64,12 +64,22 @@ CREATE TABLE charges (
     ,delete_at      timestamptz
 );
 
+CREATE TABLE handling_information (
+     information_id	    integer	        GENERATED ALWAYS AS IDENTITY PRIMARY KEY
+    ,information_code   varchar(3)      NOT NULL
+    ,information_text   varchar(50)	    NOT NULL
+    ,create_at          timestamptz	    NOT NULL
+    ,update_at          timestamptz
+    ,delete_at          timestamptz
+);
+
 CREATE TABLE shipments (
      shipment_id                integer         GENERATED ALWAYS AS IDENTITY PRIMARY KEY
     ,air_waybill_no             varchar(20)     NOT NULL UNIQUE
     ,shipment_at                date            NOT NULL
     ,origin_airport_id          integer         NOT NULL NOT NULL REFERENCES airports(airport_id)
     ,destination_airport_id     integer         NOT NULL NOT NULL REFERENCES airports(airport_id)
+    ,currency_id                integer         NOT NULL REFERENCES currencies(currency_id)
     ,create_at                  timestamptz     NOT NULL
     ,update_at                  timestamptz
     ,delete_at                  timestamptz
@@ -106,7 +116,6 @@ CREATE TABLE shipment_goods (
     ,shipment_id        integer         NOT NULL REFERENCES shipments(shipment_id)
     ,total_piece        integer         NOT NULL
     ,total_weight       numeric(7, 1)   NOT NULL
-    ,currency_id        integer         NOT NULL REFERENCES currencies(currency_id)
 );
 
 CREATE TABLE shipment_goods_items (
@@ -114,14 +123,15 @@ CREATE TABLE shipment_goods_items (
     ,shipment_goods_id          integer         NOT NULL REFERENCES shipment_goods(shipment_goods_id)
     ,commodity_name             varchar(50)     NOT NULL
     ,piece                      integer         NOT NULL
-    ,origin_country_id          integer         NOT NULL REFERENCES countries(country_id)
     ,weight                     numeric(7, 1)   NOT NULL
+    ,origin_country_id          integer         NOT NULL REFERENCES countries(country_id)
     ,hs_code                    varchar(50)     NOT NULL
 );
 
 CREATE TABLE shipment_information (
      shipment_information_id    integer         GENERATED ALWAYS AS IDENTITY PRIMARY KEY
     ,shipment_id                integer         NOT NULL REFERENCES shipments(shipment_id)
+    ,information_id             integer         NOT NULL REFERENCES handling_information(information_id)
     ,text                       varchar(50)     NOT NULL
     ,create_at                  timestamptz     NOT NULL
     ,update_at                  timestamptz
